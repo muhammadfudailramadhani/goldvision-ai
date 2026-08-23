@@ -1,0 +1,33 @@
+services:
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://goldvision:goldvision@db:5432/goldvision
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: goldvision
+      POSTGRES_PASSWORD: goldvision
+      POSTGRES_DB: goldvision
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goldvision"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Referensi DDL (dokumentasi skema; aplikasi membuat skema via SQLAlchemy)
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+
+volumes:
+  pgdata:
