@@ -17,6 +17,7 @@ class Plan(StrEnum):
 
 
 class User(Base):
+    __tablename__ = "user"
     __table_args__ = (UniqueConstraint("channel", "external_id", name="uq_user_channel_external"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -39,6 +40,7 @@ class User(Base):
 class WhatsAppOptIn(Base):
     """§33: opt-in WhatsApp — dipakai nanti saat channel diaktifkan."""
 
+    __tablename__ = "whatsapp_opt_in"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     opt_in_source: Mapped[str | None] = mapped_column(String(100))
@@ -51,6 +53,7 @@ class WhatsAppOptIn(Base):
 class QuotaUsage(Base):
     """Satu baris = satu konsumsi live analysis (server-side, §16)."""
 
+    __tablename__ = "quota_usage"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
     kind: Mapped[str] = mapped_column(String(30), default="live_analysis")
@@ -58,6 +61,7 @@ class QuotaUsage(Base):
 
 
 class Signal(Base):
+    __tablename__ = "signal"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     pair: Mapped[str] = mapped_column(String(12))
     direction: Mapped[str] = mapped_column(String(6))  # BUY | SELL
@@ -76,6 +80,7 @@ class Signal(Base):
 class SignalDelivery(Base):
     """§24: state pengiriman per user per broadcast."""
 
+    __tablename__ = "signal_delivery"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     broadcast_id: Mapped[str] = mapped_column(String(40), index=True)
     signal_id: Mapped[int | None] = mapped_column(ForeignKey("signal.id"))
@@ -92,6 +97,7 @@ class SignalDelivery(Base):
 class AuditLog(Base):
     """§44: setiap keputusan pengiriman penting tercatat."""
 
+    __tablename__ = "audit_log"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int | None] = mapped_column(Integer, index=True)
     channel: Mapped[str] = mapped_column(String(20))
