@@ -14,6 +14,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 os.chdir(Path(__file__).resolve().parent.parent)  # generated/ & db relatif ke repo root
 
+# Console Windows (cp1252) tidak bisa mencetak emoji reply bot — paksa UTF-8.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 from app.channels.base import MessageContext  # noqa: E402
 from app.channels.telegram.adapter import SimulatedTransport, TelegramAdapter  # noqa: E402
 from app.channels.telegram.handlers.handler import TelegramHandler  # noqa: E402

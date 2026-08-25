@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     telegram_enabled: bool = True
     telegram_bot_token: str = ""
     telegram_admin_id: str = ""
+    telegram_bot_username: str = ""  # untuk tautan referral t.me/<username>?start=KODE
+    telegram_webhook_secret: str = ""  # X-Telegram-Bot-Api-Secret-Token — WAJIB utk webhook publik
     whatsapp_enabled: bool = False
     whatsapp_access_token: str = ""
     whatsapp_phone_number_id: str = ""

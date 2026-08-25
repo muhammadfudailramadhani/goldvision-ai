@@ -1,0 +1,310 @@
+{
+  "document_meta": {
+    "title": "GoldVision AI - Dokumentasi Lengkap Progress FASE 1",
+    "total_pages": 12
+  },
+  "art_direction": {
+    "palette_mode": "dark",
+    "color_harmony": "analogous",
+    "background_svg": "continuous_flow",
+    "design_rationale": "Dark tech aesthetic with analogous cool tones for an AI trading bot. Continuous flow unifies the 12-page narrative."
+  },
+  "pages": [
+    {
+      "page_index": 1,
+      "narrative_role": "Burst",
+      "archetype": "cover_hero",
+      "components": [
+        {
+          "type": "Floating_Meta",
+          "position": "top-left",
+          "items": ["FASE 1 FOUNDATION", "AUGUST 2026"]
+        },
+        {
+          "type": "Hero_Typography",
+          "weight": "black",
+          "content": "GOLDVISION<br>AI"
+        },
+        {
+          "type": "Hairline_Divider",
+          "style": "accent"
+        },
+        {
+          "type": "Floating_Meta",
+          "position": "bottom-right",
+          "items": ["TELEGRAM FOREX ANALYST BOT", "PROGRESS REPORT"]
+        }
+      ]
+    },
+    {
+      "page_index": 2,
+      "narrative_role": "Expand",
+      "archetype": "data_dashboard",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "01"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "96",
+          "unit": "files",
+          "label": "PYTHON FILES"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "3577",
+          "unit": "lines",
+          "label": "TOTAL KODE"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "57",
+          "unit": "/57",
+          "label": "TESTS PASSED"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "9",
+          "unit": "/9",
+          "label": "SIMULATORS OK"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Apa Itu GoldVision AI?\n\nBot Telegram yang menganalisa pasar forex, khususnya emas (XAUUSD) dan 7 pair lainnya. Bot ini bukan sekadar pengirim sinyal - dia punya otak analisa teknikal lengkap dengan 6 lapis penilaian, sistem skor objektif, dan mesin compliance yang melindungi akun dari ban.\n\nFase 1 (Foundation) sudah 100% selesai: core engine, compliance pipeline, channel abstraction, broadcast queue, 57 test lolos, 3 simulator lolos, semua sudah di GitHub."
+        }
+      ]
+    },
+    {
+      "page_index": 3,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "02"
+        },
+        {
+          "type": "Hero_Typography",
+          "weight": "black",
+          "scale": 4,
+          "content": "OTAK BOT:\n6 INDERA ANALISA"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### 1. Trend Detection (Bobot 30%)\n\nBot memakai dua garis: SMA 20 (pendek) dan SMA 50 (panjang). Dari situ bot lihat kemiringan garis dan momentum - apakah harga lagi naik (bullish) atau turun (bearish). Makin tajam kemiringannya, makin kuat trennya.\n\n### 2. Market Structure (Bobot 20%)\n\nBot mencari swing high dan swing low - titik tertinggi dan terendah harga. Lalu dia cek polanya: HH (Higher High), HL (Higher Low) berarti tren naik kuat. LH (Lower High), LL (Lower Low) berarti tren turun. Bot juga mendeteksi BOS (Break of Structure) dan CHoCH (Change of Character) - tanda bahwa tren mungkin berbalik."
+        }
+      ]
+    },
+    {
+      "page_index": 4,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "03"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### 3. Smart Money Concepts (Bobot 20%)\n\nIni teknik yang dipakai trader institusi besar. Bot mencari dua hal: **Order Block** - zona di mana bank besar masuk pasar (ditandai candle besar sebelum harga berbalik tajam). Dan **Fair Value Gap (FVG)** - celah harga yang ditinggalkan terlalu cepat, biasanya harga akan kembali mengisi celah itu.\n\n### 4. Supply and Demand (Bobot 15%)\n\nBot mengidentifikasi zona penjual (supply) dan pembeli (demand). Caranya: cari candlestick besar yang jauh lebih panjang dari rata-rata (pakai ATR - Average True Range sebagai pengukur). Zona ini seperti magnet - harga cenderung memantul saat menyentuhnya."
+        }
+      ]
+    },
+    {
+      "page_index": 5,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "04"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### 5. Support and Resistance (Bobot 10%)\n\nBot menghitung level-level pivot harga - titik-titik di mana harga cenderung berhenti atau berbalik. Level-level ini dikelompokkan menjadi zona support (lantai harga - sulit tembus ke bawah) dan resistance (atap harga - sulit tembus ke atas).\n\n### 6. Entry Quality (Bobot 5%)\n\nSetelah semua zona teridentifikasi, bot mengevaluasi seberapa bagus posisi masuk trading. Ini mencakup: jarak dari entry ke stop loss (jangan terlalu dekat), rasio risk vs reward (harus minimal 1:1.5), dan kesesuaian entry dengan zona-zona yang sudah teridentifikasi."
+        }
+      ]
+    },
+    {
+      "page_index": 6,
+      "narrative_role": "Expand",
+      "archetype": "data_dashboard",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "05"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "80+",
+          "unit": "",
+          "label": "STRONG SETUP"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "60-79",
+          "unit": "",
+          "label": "MODERATE"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "40-59",
+          "unit": "",
+          "label": "WEAK"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "<40",
+          "unit": "",
+          "label": "NO TRADE"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Sistem Skor: 0-100\n\nKe-6 indera di atas dijumlahkan jadi **skor total 0-100**. Bobotnya sudah ditetapkan dan TIDAK bisa diubah AI - ini mencegah bot memberi skor asal-asalan.\n\n**80+ = STRONG SETUP** - Peluang terbaik, layak masuk pasar.\n**60-79 = MODERATE** - Boleh trade tapi hati-hati.\n**40-59 = WEAK** - Lebih baik skip.\n**<40 = NO TRADE** - Jangan masuk.\n\nBot menganalisa **5 timeframe sekaligus**: M15, H1, H4, D1, W1. Kalau D1 dan H4 saling bertentangan, bot otomatis memblokir sinyal (tf_blocked). Bot juga bikin **chart candlestick** otomatis dengan overlay semua zona dan level."
+        }
+      ]
+    },
+    {
+      "page_index": 7,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "06"
+        },
+        {
+          "type": "Hero_Typography",
+          "weight": "black",
+          "scale": 4,
+          "content": "SINYAL TRADING\nDAN FINGERPRINT"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Cara Bot Menghasilkan Sinyal\n\nKalau skor analisa mencapai 60+ (MODERATE atau STRONG), bot akan membuat sinyal trading lengkap berisi:\n\n- **Pair** - misal XAUUSD (emas) atau EURUSD\n- **Arah** - BUY atau SELL\n- **Entry** - harga masuk yang direkomendasikan\n- **Stop Loss (SL)** - harga dimana trading dipotong kalau salah\n- **Take Profit 1 (TP1)** - target pertama, biasanya 1:1.5 R\n- **Take Profit 2 (TP2)** - target kedua, biasanya 1:2 R\n- **Timeframe** - kerangka waktu analisa\n\n### Anti-Duplikat: Fingerprint SHA-256\n\nSetiap sinyal punya fingerprint unik (hash SHA-256) dari gabungan: pair + arah + entry + SL + TP1 + TP2 + timeframe + versi. Sinyal yang fingerprint-nya sama PASTI tidak dikirim 2x, bahkan kalau bot restart."
+        }
+      ]
+    },
+    {
+      "page_index": 8,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "07"
+        },
+        {
+          "type": "Hero_Typography",
+          "weight": "black",
+          "scale": 4,
+          "content": "PELINDUNG BOT:\nCOMPLIANCE ENGINE"
+        },
+        {
+          "type": "Process_List",
+          "steps": [
+            {"title": "1. Consent", "description": "User wajib ketik /start dulu baru bisa terima sinyal"},
+            {"title": "2. Preference", "description": "Cek preferensi user dan jam tenang"},
+            {"title": "3. Suppression", "description": "Cek apakah user sudah opt-out atau diblokir"},
+            {"title": "4. Rate Limit", "description": "Batas pesan per menit, tidak boleh spam"},
+            {"title": "5. Duplicate", "description": "Sinyal fingerprint sama? Tidak dikirim"},
+            {"title": "6. Channel Policy", "description": "Aturan khusus per channel"},
+            {"title": "7. Queue and Send", "description": "Masuk antrian, kirim pelan-pelan"},
+            {"title": "8. Audit Log", "description": "Semua aksi dicatat ke database"}
+          ]
+        }
+      ]
+    },
+    {
+      "page_index": 9,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "08"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Pipeline Compliance\n\nSetiap pesan yang dikirim bot HARUS melewati 8 tahap tadi. **Kalau salah satu tahap gagal, pesa TIDAK dikirim.** Ini mencegah spam dan melindungi akun bot dari ban oleh Telegram.\n\n### Anti-Ban, Bukan Kameraflase\n\nBot TIDAK memakai trik curang seperti: ganti token, proxy rotation, kontak palsu, atau scraping. Bot menghormati rate limit Telegram secara jujur.\n\nKalau Telegram bilang pelan-pelan (error 429), bot jeda sesuai waktu yang diperintah (retry_after), lalu coba lagi maksimal 3 kali. Kalau masih gagal, sinyal ditandai failed.\n\n### Broadcast Queue\n\nKalau bot harus kirim ke banyak user sekaligus, dia TIDAK pernah loop for user in users: send(). Semua masuk antrian dulu, lalu dikirim satu-satu dengan jeda. Ini mencegah bot ke-ban karena flood.\n\n### Kuota User\n\n- **FREE** = 3 analisa per minggu\n- **VIP** = 4 analisa per hari (kadaluarsa auto-fallback ke FREE)\n- Command ringan (/help, /status, /limit) TIDAK mengurangi kuota"
+        }
+      ]
+    },
+    {
+      "page_index": 10,
+      "narrative_role": "Expand",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "09"
+        },
+        {
+          "type": "Hero_Typography",
+          "weight": "black",
+          "scale": 4,
+          "content": "CHANNEL:\nTELEGRAM DAN WHATSAPP"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Arsitektur Channel\n\nOtak bot (core engine) TIDAK tahu tentang Telegram atau WhatsApp. Dia hanya bicara dengan protokol abstrak (ChannelAdapter). Jadi kalau nanti mau tambah Discord atau LINE, tinggal bikin adapter baru tanpa ubah core engine.\n\n### Telegram (AKTIF)\n\nBot punya adapter Telegram lengkap: handler pesan, parser intent bahasa Indonesia dan Inggris, keyboard inline, rate limiter, dan compliance guard. Sekarang berjalan di mode simulasi (localhost).\n\n### WhatsApp (DIMATIKAN)\n\nKodenya sudah lengkap: adapter, opt-in system, template pesan, compliance pipeline, 24h service window, dan delivery quality threshold. Tapi sengaja dimatikan sesuai spesifikasi. Tinggal aktifkan nanti."
+        }
+      ]
+    },
+    {
+      "page_index": 11,
+      "narrative_role": "Expand",
+      "archetype": "data_dashboard",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "10"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "57",
+          "unit": "tests",
+          "label": "AUTOMATED TESTS"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "2.78",
+          "unit": "sec",
+          "label": "TOTAL RUNTIME"
+        },
+        {
+          "type": "Stat_Block",
+          "number": "10",
+          "unit": "files",
+          "label": "TEST MODULES"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Hasil Test Lengkap (57/57 PASS)\n\n**test_scoring (5)** - Bobot = 100, skor sempurna/nol, threshold, confidence clamping.\n\n**test_intent (10)** - Semua command, NL pairs (gold/emas/EURUSD), PNL, scanner, admin.\n\n**test_quota (4)** - Free 3/minggu, VIP 4/hari, expired fallback, reason code.\n\n**test_compliance (8)** - Allowed, no-consent, opt-out, suppressed, rate limit, duplicate, quiet hours.\n\n**test_rate_limit (5)** - Chat burst block, group 20/min, 429 honor retry.\n\n**test_signal (6)** - Fingerprint, dedup on SL change, delivery policy.\n\n**test_market_analysis (6)** - Candle shape, 5 TF, deterministic replay.\n\n**test_broadcast (4)** - 1000 user, dedup, 429 retry.\n\n**test_channels (5)** - Isolation, WhatsApp disabled.\n\n**test_handler_e2e (4)** - Full flow, chart on disk."
+        }
+      ]
+    },
+    {
+      "page_index": 12,
+      "narrative_role": "Echo",
+      "archetype": "editorial_flow",
+      "components": [
+        {
+          "type": "Page_Ghost_Number",
+          "number": "11"
+        },
+        {
+          "type": "Hero_Typography",
+          "weight": "black",
+          "scale": 4,
+          "content": "APA YANG\nBELUM JADI?"
+        },
+        {
+          "type": "Glass_Canvas",
+          "markdown_content": "### Yang Butuh Untuk Go-Live\n\n**Telegram Bot Token** - Dari @BotFather, biar bot bisa terima dan kirim pesan beneran ke user.\n\n**API Key Market Data** - Twelve Data atau Alpha Vantage, biar analisa pakai data harga asli (sekarang masih pakai data simulasi/dummy).\n\n**AI/LLM Integration** - Biar bot bisa menjelaskan analisa pakai bahasa manusia yang natural dan informatif.\n\n**Database PostgreSQL** - Sekarang pakai SQLite sementara untuk development.\n\n### Yang Sudah Siap Tapi Dimatikan\n\n**WhatsApp** - Kodenya sudah ada lengkap (adapter, opt-in, compliance, template), tapi sengaja dimatikan sesuai spesifikasi. Tinggal aktifkan nanti kalau mau.\n\n**Elliott Wave** - Placeholder sudah ada, analisa belum diimplementasi.\n\n### Analogi Sederhana\n\nFase 1 itu kayak sudah membangun kerangka mobil lengkap: mesin, rem, stir, bakar - semua nyambung dan sudah ditest. Tinggal isi bensin (API key dan bot token) terus bawa jalan."
+        }
+      ]
+    }
+  ]
+}

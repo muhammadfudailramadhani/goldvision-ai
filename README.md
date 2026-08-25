@@ -5,21 +5,25 @@ Telegram AI Forex Analyst — **Telegram-first, WhatsApp disiapkan tapi DISABLED
 > **Prinsip build**: BUILD → DOCUMENT → TEST → VERIFY → FIX. Fitur dianggap selesai hanya jika
 > CODE + TEST + DOCUMENTATION + LOCAL RUN + LOCAL VERIFICATION + COMPLIANCE CHECK (§53).
 
-## Status: FASE 1 — Foundation ✅
+## Status: FASE 2 — Live Data & Fitur ✅
 
 | Komponen | Status |
 |---|---|
 | Repository structure (§3) | ✅ |
 | Core engine (analysis/scoring/signal/quota/pnl/chart) | ✅ mock mode |
-| Telegram adapter + handler + NL intent | ✅ SimulatedTransport |
+| Telegram adapter + handler + NL intent | ✅ SimulatedTransport + polling nyata |
 | Compliance engine universal + telegram | ✅ 9/9 skenario PASS |
 | Rate limiter + broadcast queue + 429 handling | ✅ |
 | WhatsApp folder | ✅ struktur siap, DISABLED |
 | FastAPI skeleton | ✅ /health /api/analyze |
 | Database (SQLite dev / PostgreSQL prod) | ✅ |
-| Twelve Data / Alpha Vantage live | 🔜 FASE 2 |
-| Bot Telegram nyata (polling/webhook) | 🔜 FASE 2 |
-| Elliott Wave / backtest / payment / referral | 🔒 FASE 3 |
+| Elliott Wave rule-based | ✅ FASE 2 |
+| Referral end-to-end (/referral, deep-link) | ✅ FASE 2 |
+| Twelve Data / Alpha Vantage / MT5 live | ✅ FASE 2 |
+| Backtest walk-forward (/backtest) | ✅ FASE 2 |
+| Bot Telegram nyata (polling/webhook) | ✅ polling (`scripts/run_telegram.py`) |
+| Payment / AI content asli | 🔒 FASE 3 |
+| WhatsApp aktivasi, deployment prod | 🔒 FASE 3 / atas permintaan |
 
 ## Arsitektur (§2, §58)
 

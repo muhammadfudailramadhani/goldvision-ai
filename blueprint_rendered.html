@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <title>GoldVision AI - Dokumentasi Lengkap Progress FASE 1</title>
+    <style>
+        :root {
+  /* 60% ground */
+  --c-bg: #111314;
+  --c-bg-rgb: 17,19,20;
+  /* 30% structure */
+  --c-mid: #272e31;
+  --c-mid-rgb: 39,46,49;
+  /* 10% emphasis */
+  --c-accent: #6157d0;
+  --c-accent-rgb: 97,87,208;
+  /* Typography */
+  --c-text: #f1f2f2;
+  --c-muted: #6d7478;
+  /* Surfaces */
+  --c-surface: rgba(255,255,255,0.04);
+}
+        
+@page {
+  size: var(--canvas-w, 720px) var(--canvas-h, 960px);
+  margin: 0;
+}
+:root {
+  --font-sans: 'Inter', 'Noto Sans SC', 'Helvetica Neue', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+  --font-serif: 'Playfair Display', 'Noto Serif SC', 'Cormorant Garamond', 'Apple Color Emoji', serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Apple Color Emoji', monospace;
+
+  /* Typographic Scale — 6-level fluid type system (Modular Scale) */
+  --text-scale-6: clamp(64px, 12vw, 150px);   /* Hero / Display — oversized, single word or short phrase */
+  --text-scale-5: clamp(48px, 8vw, 96px);      /* Primary Title — poster headline */
+  --text-scale-4: clamp(32px, 5vw, 56px);      /* Subheadline — chapter opener or key quote */
+  --text-scale-3: clamp(20px, 3vw, 32px);      /* Lead Paragraph — slightly larger than body */
+  --text-scale-2: 16px;                         /* Body — standard body text */
+  --text-scale-1: 12px;                         /* Meta / Caption — minimum readable size */
+}
+html, body {
+  margin: 0; padding: 0;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+/* Browser preview: scale poster to fit viewport & center on matching background */
+@media screen {
+  html {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background: var(--c-bg);
+  }
+  body {
+    transform-origin: top center;
+    margin: 0 auto;
+    box-shadow: 0 0 60px rgba(0,0,0,0.3);
+    /* scale injected by override_css with concrete canvas dimensions */
+  }
+}
+.canvas {
+  width: var(--canvas-w, 720px);
+  min-height: var(--canvas-h, 960px);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  page-break-after: always;
+}
+/* ═══ Continuous Canvas Mode (multi-page as one seamless surface) ═══ */
+.continuous-canvas {
+  width: var(--canvas-w, 720px);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  /* height is set inline: canvas_h * total_pages */
+}
+.continuous-canvas .bg-layer-full {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.continuous-canvas .bg-layer-full svg {
+  width: 100%;
+  height: 100%;
+}
+.continuous-canvas .page-section {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+  /* top and height set inline per page */
+}
+.continuous-canvas .page-section .safe-zone {
+  position: absolute;
+  inset: 10% 12%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, minmax(0, auto));
+  align-content: start;
+}
+.continuous-canvas .page-section .page-ghost {
+  position: absolute;
+  bottom: -5%;
+  right: 5%;
+  font-size: 240px;
+  font-weight: 900;
+  color: var(--c-mid);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+/* 12% Breathing Margin Enforcer (balanced: enough air without wasting space) */
+.safe-zone {
+  position: absolute;
+  inset: 10% 12%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, minmax(0, auto));
+  align-content: start;
+  /* gap is injected dynamically by compile_blueprint via inline style */
+}
+/* Grid-item wrapper — every component gets one */
+.grid-item {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  overflow: visible;
+}
+/* Global content-overflow protection — prevents ANY text/block from breaking out of its container */
+.grid-item * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.grid-item p, .grid-item li, .grid-item span, .grid-item h1, .grid-item h2, .grid-item h3, .grid-item h4, .grid-item td, .grid-item th, .grid-item div {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+/* CJK-safe text wrapping: prefer keeping CJK word groups intact, but allow break when necessary */
+.hero-type, .hero-sub, .glass-canvas, .shaped-content, .stat-label, .delta-metric, .delta-label {
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-break: strict;
+}
+
+/* ═══ Micro-Typography: Computational Typesetting ═══ */
+p, .glass-canvas, .shaped-content, li {
+  /* Algorithmic justification — eliminates white rivers between words */
+  text-align: justify;
+  hyphens: auto;
+  word-spacing: -0.05em;
+  /* Hanging punctuation — visually aligned optical edges */
+  hanging-punctuation: first last;
+  /* Kill orphans & widows — force min 3 lines carried across page breaks */
+  orphans: 3;
+  widows: 3;
+}
+.grid-item table {
+  width: 100%;
+  table-layout: fixed;
+  overflow: hidden;
+}
+.grid-item img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* --- Archetype Layouts --- */
+/* All archetypes share the 12×12 grid via .safe-zone.
+   Archetype classes may override alignment defaults on the canvas level. */
+.archetype-cover_hero .safe-zone {
+  align-content: start;
+  inset: 12% 14%;
+}
+/* Cover hero typography scale: larger text for covers */
+.archetype-cover_hero .hero-type {
+  font-size: clamp(42px, 8vw, 72px);
+  line-height: 1.15;
+}
+.archetype-cover_hero .hero-sub {
+  font-size: clamp(22px, 4vw, 32px);
+  line-height: 1.3;
+  opacity: 0.85;
+}
+.archetype-cover_hero .floating-meta {
+  font-size: clamp(16px, 2.5vw, 22px);
+}
+.archetype-split_vertical { display: grid; grid-template-columns: 1fr 1fr; min-height: 960px; }
+.archetype-split_vertical .safe-zone { position: relative; inset: auto; padding: 10%; display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(12, 1fr); align-content: center; }
+.archetype-split_vertical.single-column { grid-template-columns: 1fr; }
+.archetype-editorial_flow .safe-zone { align-content: center; }
+.archetype-scattered_canvas .safe-zone { /* same 12×12 grid — scattered effect via grid_area placement */ }
+.archetype-data_dashboard .safe-zone { /* same 12×12 grid — dashboard tiles via grid_area placement */ }
+.archetype-shaped_editorial .safe-zone { align-content: center; }
+
+/* Continuous canvas archetype overrides (page-section inherits archetype class) */
+.continuous-canvas .page-section.archetype-cover_hero .safe-zone { align-content: start; inset: 12% 14%; }
+.continuous-canvas .page-section.archetype-cover_hero .hero-type { font-size: clamp(42px, 8vw, 72px); line-height: 1.15; }
+.continuous-canvas .page-section.archetype-cover_hero .hero-sub { font-size: clamp(22px, 4vw, 32px); line-height: 1.3; opacity: 0.85; }
+.continuous-canvas .page-section.archetype-cover_hero .floating-meta { font-size: clamp(16px, 2.5vw, 22px); }
+.continuous-canvas .page-section.archetype-editorial_flow .safe-zone { align-content: center; }
+.continuous-canvas .page-section.archetype-shaped_editorial .safe-zone { align-content: center; inset: 5% 6%; }
+
+/* --- Components --- */
+.hero-type {
+  font-size: clamp(48px, 10vw, 110px);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  position: relative;
+  z-index: 10;
+}
+.hero-type.weight-black { font-weight: 900; }
+.hero-type.weight-thin { font-weight: 100; letter-spacing: 0.05em; font-family: var(--font-serif); }
+.hero-sub {
+  margin: 8px 0 0 0;
+  font-size: var(--text-scale-2);
+  line-height: 1.3;
+  opacity: 0.8;
+}
+/* Hero container needs vertical stacking */
+.grid-item:has(.hero-type) {
+  flex-direction: column;
+  justify-content: center;
+}
+.hero-type, .hero-sub {
+  width: 100%;
+}
+.hero-type {
+  color: var(--c-text);
+}
+
+.glass-canvas {
+  background: var(--c-surface);
+  border: 1px solid rgba(128, 128, 128, 0.08);
+  border-radius: 2px;
+  padding: 36px;
+  font-size: 16px;
+  line-height: 1.6;
+  z-index: 5;
+  position: relative;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.floating-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+  opacity: 0.6;
+  z-index: 20;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Positioned via grid_area in .grid-item wrapper — no absolute needed */
+}
+/* Legacy position helpers (kept for backwards compat with old blueprints) */
+.pos-top-left { align-self: start; justify-self: start; }
+.pos-top-right { align-self: start; justify-self: end; text-align: right; }
+.pos-bottom-left { align-self: end; justify-self: start; }
+.pos-bottom-right { align-self: end; justify-self: end; text-align: right; }
+
+.stat-block { display: flex; flex-direction: column; margin-bottom: 24px; }
+.stat-num { font-size: clamp(32px, 5vw, 56px); font-weight: 900; line-height: 0.9; color: var(--c-text); }
+.stat-unit { font-size: clamp(14px, 2vw, 20px); font-weight: 300; color: var(--c-muted); margin-left: 4px; display: inline;}
+.stat-label { font-size: 12px; letter-spacing: 0.15em; color: var(--c-accent); margin-top: 8px; text-transform: uppercase; }
+
+.hairline { border: none; border-top: 0.5px solid var(--c-muted); opacity: 0.3; margin: 8px 0; width: 100%; }
+.hairline.style-accent { border-top-color: var(--c-accent); width: 30%; margin-left: 0; opacity: 0.8;}
+
+.page-ghost {
+  position: absolute; bottom: -5%; right: 5%;
+  font-size: 240px; font-weight: 900; color: var(--c-mid);
+  opacity: 0.05; pointer-events: none; z-index: 0;
+}
+
+.bg-layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.bg-layer svg { width: 100%; height: 100%; }
+
+/* --- Shaped_Canvas (Semantic Shape-Wrapping) --- */
+.shaped-canvas {
+  position: relative;
+  padding: 24px;
+  font-size: 16px;
+  line-height: 1.7;
+  z-index: 5;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.shape-float {
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+.shape-circle   { shape-outside: circle(45% at 50% 50%);   width: 40%; height: 90%; }
+.shape-wave     { shape-outside: polygon(0 0, 80% 0, 60% 25%, 80% 50%, 60% 75%, 80% 100%, 0 100%); width: 45%; height: 100%; }
+.shape-diagonal_slash { shape-outside: polygon(0 0, 100% 0, 0 100%); width: 50%; height: 100%; }
+.shape-diamond  { shape-outside: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); width: 45%; height: 90%; }
+.shape-wedge_right { shape-outside: polygon(0 0, 60% 0, 100% 50%, 60% 100%, 0 100%); width: 50%; height: 100%; }
+
+/* --- Archetype: shaped_editorial --- */
+.archetype-shaped_editorial .safe-zone {
+  inset: 5% 6%;
+  /* Inherits 12×12 grid from .safe-zone */
+  align-content: center;
+}
+
+/* ═══ Tufte Marginalia System ═══ */
+/* 30% sidenote rail for report/long-form archetypes */
+.archetype-tufte_report .safe-zone {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 40px;
+  align-content: start;
+}
+.archetype-tufte_report .main-column {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  gap: inherit;
+}
+.archetype-tufte_report .side-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+.sidenote {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--c-muted);
+  border-left: 2px solid var(--c-accent);
+  padding-left: 12px;
+  opacity: 0.85;
+}
+.sidenote .sidenote-label {
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-accent);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ═══ Delta Widget — Data-to-Ink Ratio Component ═══ */
+.delta-widget {
+  text-align: center;
+  padding: 16px 12px;
+}
+.delta-widget .delta-metric {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+  margin-bottom: 4px;
+}
+.delta-widget .delta-value {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--c-text);
+  line-height: 1.1;
+}
+.delta-widget .delta-change {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.delta-widget .delta-label {
+  font-size: 12px;
+  color: var(--c-muted);
+  margin-top: 8px;
+}
+
+/* ═══ Polymorphic Process_List — Container Query Adaptive ═══ */
+.process-list-container {
+  container-type: inline-size;
+  width: 100%;
+  min-height: 100%;
+}
+/* Wide: horizontal timeline */
+.process-list {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-height: 100%;
+}
+.process-list .process-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 12px 4px;
+}
+.process-step .step-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--c-accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px; margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.process-step .step-title { font-weight: 700; font-size: 13px; color: var(--c-text); }
+.process-step .step-desc { font-size: 12px; color: var(--c-muted); margin-top: 4px; line-height: 1.4; }
+/* Connector line between horizontal steps */
+.process-step:not(:last-child)::after {
+  content: ''; position: absolute; top: 28px; right: -6px;
+  width: 12px; height: 2px; background: var(--c-accent); opacity: 0.5;
+}
+/* Narrow: vertical numbered list */
+@container (max-width: 360px) {
+  .process-list {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .process-list .process-step {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 4px 0;
+  }
+  .process-step .step-num { margin-bottom: 0; }
+  .process-step:not(:last-child)::after { display: none; }
+}
+
+        :root { --canvas-w: 720px; --canvas-h: 960px; }
+@page { size: 720px 960px; margin: 0; }
+html, body { width: 720px; min-height: 960px; }
+@media screen { body { scale: min(1, calc(100vw / 720), calc(100vh / 960)); } }
+
+    </style>
+</head>
+<body>
+
+<div class="continuous-canvas" style="height: 11520px; background: var(--c-bg);">
+  <div class="bg-layer-full"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 11520" width="720" height="11520">
+  <defs>
+    <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6157d0" stop-opacity="0.05"/>
+      <stop offset="50%" stop-color="#6157d0" stop-opacity="0.075"/>
+      <stop offset="100%" stop-color="#6157d0" stop-opacity="0.025"/>
+    </linearGradient>
+  </defs>
+  <path d="M440,0 C689,133 67,250 86,501 C610,687 581,877 230,1002 C386,1262 273,1343 201,1503 C597,1692 620,1849 496,2003 C507,2078 164,2292 462,2504 C57,2616 73,2791 586,3005 C458,3143 267,3278 122,3506 C192,3759 467,3858 315,4007 C123,4218 118,4313 89,4508 C712,4701 401,4875 198,5009 C607,5229 165,5246 363,5510 C227,5628 152,5929 87,6010 C631,6139 472,6320 187,6511 C658,6668 191,6791 446,7012 C404,7130 421,7422 386,7513 C288,7622 718,7846 199,8014 C65,8089 79,8370 411,8515 C570,8665 46,8822 538,9016 C717,9187 699,9418 76,9517 C8,9726 491,9854 536,10017 C192,10211 80,10335 474,10518 C327,10774 631,10802 268,11019 C360,11120 657,11424 162,11520" fill="none" stroke="url(#fg)" stroke-width="75" stroke-linecap="round" opacity="0.050"/>
+  <path d="M440,0 C396,118 628,315 423,501 C152,674 526,772 160,1002 C224,1266 468,1320 511,1503 C373,1592 162,1801 383,2003 C424,2115 159,2248 520,2504 C454,2615 652,2907 377,3005 C51,3118 482,3279 72,3506 C95,3758 411,3831 259,4007 C565,4234 137,4257 83,4508 C310,4658 336,4884 607,5009 C485,5271 71,5320 578,5510 C244,5747 179,5778 551,6010 C323,6160 201,6291 249,6511 C665,6665 620,6852 105,7012 C36,7277 602,7437 578,7513 C667,7748 120,7841 617,8014 C154,8159 42,8320 121,8515 C709,8633 565,8836 352,9016 C305,9272 717,9357 112,9517 C517,9613 214,9941 510,10017 C417,10191 539,10259 513,10518 C421,10684 614,10780 146,11019 C692,11100 134,11369 346,11520" fill="none" stroke="url(#fg)" stroke-width="94" stroke-linecap="round" opacity="0.060"/>
+  <path d="M207,0 C191,252 634,406 141,501 C266,598 600,872 585,1002 C440,1264 471,1234 214,1503 C588,1628 478,1921 414,2003 C97,2092 77,2345 429,2504 C196,2691 517,2776 313,3005 C457,3123 352,3417 408,3506 C609,3590 305,3792 373,4007 C3,4226 459,4290 610,4508 C534,4683 308,4740 190,5009 C54,5251 651,5348 485,5510 C601,5691 107,5766 209,6010 C222,6256 573,6413 300,6511 C647,6619 180,6762 459,7012 C562,7254 293,7367 245,7513 C111,7764 623,7939 254,8014 C584,8255 18,8392 505,8515 C239,8766 578,8918 114,9016 C584,9134 567,9268 336,9517 C628,9754 160,9910 647,10017 C331,10144 573,10293 646,10518 C17,10622 236,10922 114,11019 C696,11140 462,11330 195,11520" fill="none" stroke="url(#fg)" stroke-width="109" stroke-linecap="round" opacity="0.070"/>
+  <path d="M381,0 C50,198 238,293 613,501 C611,710 216,793 138,1002 C294,1148 213,1258 631,1503 C303,1756 488,1914 175,2003 C443,2129 395,2234 626,2504 C207,2656 418,2866 225,3005 C335,3159 154,3330 134,3506 C649,3731 122,3754 322,4007 C371,4199 241,4401 492,4508 C541,4708 162,4778 253,5009 C18,5123 342,5409 421,5510 C52,5658 453,5779 367,6010 C501,6175 176,6372 294,6511 C4,6727 554,6763 404,7012 C306,7113 690,7346 219,7513 C36,7628 611,7835 480,8014 C577,8213 711,8364 73,8515 C684,8758 441,8889 605,9016 C363,9247 394,9426 382,9517 C535,9677 187,9797 486,10017 C459,10236 375,10373 499,10518 C198,10599 206,10803 458,11019 C230,11192 100,11296 282,11520" fill="none" stroke="url(#fg)" stroke-width="95" stroke-linecap="round" opacity="0.080"/>
+</svg></div>
+
+  <div class="page-section archetype-cover_hero" style="top: 0px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px;">
+      <div class="grid-item" style="grid-area: 1 / 1 / 4 / 13; align-items: start; justify-content: start;">
+<div class="floating-meta pos-top-left"><span>FASE 1 FOUNDATION</span><span>AUGUST 2026</span></div>
+</div>
+      <div class="grid-item" style="grid-area: 4 / 1 / 7 / 13; align-items: start; justify-content: start;">
+<h1 class="hero-type weight-black">GOLDVISION<br>AI</h1>
+</div>
+      <div class="grid-item" style="grid-area: 8 / 1 / 10 / 13; align-items: start; justify-content: start;">
+<hr class="hairline style-accent">
+</div>
+      <div class="grid-item" style="grid-area: 10 / 1 / 13 / 13; align-items: start; justify-content: start;">
+<div class="floating-meta pos-bottom-right"><span>TELEGRAM FOREX ANALYST BOT</span><span>PROGRESS REPORT</span></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-data_dashboard" style="top: 960px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 10% 12%;">
+      <div class="page-ghost">01</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 5 / 7; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">96</span><span class="stat-unit">files</span></div>
+            <span class="stat-label">PYTHON FILES</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 1 / 7 / 5 / 13; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">3577</span><span class="stat-unit">lines</span></div>
+            <span class="stat-label">TOTAL KODE</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 5 / 1 / 9 / 7; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">57</span><span class="stat-unit">/57</span></div>
+            <span class="stat-label">TESTS PASSED</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 5 / 7 / 9 / 13; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">9</span><span class="stat-unit">/9</span></div>
+            <span class="stat-label">SIMULATORS OK</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 9 / 1 / 13 / 7; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box; font-size: 12px;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Apa Itu GoldVision AI?</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot Telegram yang menganalisa pasar forex, khususnya emas (XAUUSD) dan 7 pair lainnya. Bot ini bukan sekadar pengirim sinyal - dia punya otak analisa teknikal lengkap dengan 6 lapis penilaian, sistem skor objektif, dan mesin compliance yang melindungi akun dari&nbsp;ban.</p>
+<p style="margin:0 0 12px 0;line-height:1.7">Fase 1 (Foundation) sudah 100% selesai: core engine, compliance pipeline, channel abstraction, broadcast queue, 57 test lolos, 3 simulator lolos, semua sudah di&nbsp;GitHub.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 1920px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">02</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 4 / 13; align-items: start; justify-content: start;">
+<h1 class="hero-type weight-black" style="font-size: var(--text-scale-4)">OTAK BOT:
+6 INDERA ANALISA</h1>
+</div>
+      <div class="grid-item" style="grid-area: 4 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">1. Trend Detection (Bobot 30%)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot memakai dua garis: SMA 20 (pendek) dan SMA 50 (panjang). Dari situ bot lihat kemiringan garis dan momentum - apakah harga lagi naik (bullish) atau turun (bearish). Makin tajam kemiringannya, makin kuat&nbsp;trennya.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">2. Market Structure (Bobot 20%)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot mencari swing high dan swing low - titik tertinggi dan terendah harga. Lalu dia cek polanya: HH (Higher High), HL (Higher Low) berarti tren naik kuat. LH (Lower High), LL (Lower Low) berarti tren turun. Bot juga mendeteksi BOS (Break of Structure) dan CHoCH (Change of Character) - tanda bahwa tren mungkin&nbsp;berbalik.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 2880px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">03</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">3. Smart Money Concepts (Bobot 20%)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Ini teknik yang dipakai trader institusi besar. Bot mencari dua hal: <strong>Order Block</strong> - zona di mana bank besar masuk pasar (ditandai candle besar sebelum harga berbalik tajam). Dan <strong>Fair Value Gap (FVG)</strong> - celah harga yang ditinggalkan terlalu cepat, biasanya harga akan kembali mengisi celah&nbsp;itu.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">4. Supply and Demand (Bobot 15%)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot mengidentifikasi zona penjual (supply) dan pembeli (demand). Caranya: cari candlestick besar yang jauh lebih panjang dari rata-rata (pakai ATR - Average True Range sebagai pengukur). Zona ini seperti magnet - harga cenderung memantul saat&nbsp;menyentuhnya.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 3840px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">04</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">5. Support and Resistance (Bobot 10%)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot menghitung level-level pivot harga - titik-titik di mana harga cenderung berhenti atau berbalik. Level-level ini dikelompokkan menjadi zona support (lantai harga - sulit tembus ke bawah) dan resistance (atap harga - sulit tembus ke&nbsp;atas).</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">6. Entry Quality (Bobot 5%)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Setelah semua zona teridentifikasi, bot mengevaluasi seberapa bagus posisi masuk trading. Ini mencakup: jarak dari entry ke stop loss (jangan terlalu dekat), rasio risk vs reward (harus minimal 1:1.5), dan kesesuaian entry dengan zona-zona yang sudah&nbsp;teridentifikasi.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-data_dashboard" style="top: 4800px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">05</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 5 / 7; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">80+</span><span class="stat-unit"></span></div>
+            <span class="stat-label">STRONG SETUP</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 1 / 7 / 5 / 13; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">60-79</span><span class="stat-unit"></span></div>
+            <span class="stat-label">MODERATE</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 5 / 1 / 9 / 7; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">40-59</span><span class="stat-unit"></span></div>
+            <span class="stat-label">WEAK</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 5 / 7 / 9 / 13; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num"><40</span><span class="stat-unit"></span></div>
+            <span class="stat-label">NO TRADE</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 9 / 1 / 13 / 7; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box; font-size: 12px;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Sistem Skor: 0-100</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Ke-6 indera di atas dijumlahkan jadi <strong>skor total 0-100</strong>. Bobotnya sudah ditetapkan dan TIDAK bisa diubah AI - ini mencegah bot memberi skor&nbsp;asal-asalan.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>80+ = STRONG SETUP</strong> - Peluang terbaik, layak masuk pasar. <strong>60-79 = MODERATE</strong> - Boleh trade tapi hati-hati. <strong>40-59 = WEAK</strong> - Lebih baik skip. <strong><40 = NO TRADE</strong> - Jangan&nbsp;masuk.</p>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot menganalisa <strong>5 timeframe sekaligus</strong>: M15, H1, H4, D1, W1. Kalau D1 dan H4 saling bertentangan, bot otomatis memblokir sinyal (tf_blocked). Bot juga bikin <strong>chart candlestick</strong> otomatis dengan overlay semua zona dan&nbsp;level.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 5760px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">06</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 4 / 13; align-items: start; justify-content: start;">
+<h1 class="hero-type weight-black" style="font-size: var(--text-scale-4)">SINYAL TRADING
+DAN FINGERPRINT</h1>
+</div>
+      <div class="grid-item" style="grid-area: 4 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box; font-size: 15px;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Cara Bot Menghasilkan Sinyal</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Kalau skor analisa mencapai 60+ (MODERATE atau STRONG), bot akan membuat sinyal trading lengkap&nbsp;berisi:</p>
+<ul style="margin:8px 0;padding-left:20px;list-style-type:disc">
+<li style="margin:4px 0;line-height:1.6"><strong>Pair</strong> - misal XAUUSD (emas) atau EURUSD</li>
+<li style="margin:4px 0;line-height:1.6"><strong>Arah</strong> - BUY atau SELL</li>
+<li style="margin:4px 0;line-height:1.6"><strong>Entry</strong> - harga masuk yang direkomendasikan</li>
+<li style="margin:4px 0;line-height:1.6"><strong>Stop Loss (SL)</strong> - harga dimana trading dipotong kalau salah</li>
+<li style="margin:4px 0;line-height:1.6"><strong>Take Profit 1 (TP1)</strong> - target pertama, biasanya 1:1.5 R</li>
+<li style="margin:4px 0;line-height:1.6"><strong>Take Profit 2 (TP2)</strong> - target kedua, biasanya 1:2 R</li>
+<li style="margin:4px 0;line-height:1.6"><strong>Timeframe</strong> - kerangka waktu analisa</li>
+</ul>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Anti-Duplikat: Fingerprint SHA-256</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Setiap sinyal punya fingerprint unik (hash SHA-256) dari gabungan: pair + arah + entry + SL + TP1 + TP2 + timeframe + versi. Sinyal yang fingerprint-nya sama PASTI tidak dikirim 2x, bahkan kalau bot&nbsp;restart.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 6720px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 10% 12%;">
+      <div class="page-ghost">07</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 5 / 13; align-items: start; justify-content: start;">
+<h1 class="hero-type weight-black" style="font-size: var(--text-scale-4)">PELINDUNG BOT:
+COMPLIANCE ENGINE</h1>
+</div>
+      <div class="grid-item" style="grid-area: 5 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="process-list-container"><ul class="process-list"><li class="process-step"><span class="step-num">1</span><div><div class="step-title">1. Consent</div><div class="step-desc">User wajib ketik /start dulu baru bisa terima sinyal</div></div></li>
+<li class="process-step"><span class="step-num">2</span><div><div class="step-title">2. Preference</div><div class="step-desc">Cek preferensi user dan jam tenang</div></div></li>
+<li class="process-step"><span class="step-num">3</span><div><div class="step-title">3. Suppression</div><div class="step-desc">Cek apakah user sudah opt-out atau diblokir</div></div></li>
+<li class="process-step"><span class="step-num">4</span><div><div class="step-title">4. Rate Limit</div><div class="step-desc">Batas pesan per menit, tidak boleh spam</div></div></li>
+<li class="process-step"><span class="step-num">5</span><div><div class="step-title">5. Duplicate</div><div class="step-desc">Sinyal fingerprint sama? Tidak dikirim</div></div></li>
+<li class="process-step"><span class="step-num">6</span><div><div class="step-title">6. Channel Policy</div><div class="step-desc">Aturan khusus per channel</div></div></li>
+<li class="process-step"><span class="step-num">7</span><div><div class="step-title">7. Queue and Send</div><div class="step-desc">Masuk antrian, kirim pelan-pelan</div></div></li>
+<li class="process-step"><span class="step-num">8</span><div><div class="step-title">8. Audit Log</div><div class="step-desc">Semua aksi dicatat ke database</div></div></li>
+</ul></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 7680px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">08</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box; font-size: 15px;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Pipeline Compliance</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Setiap pesan yang dikirim bot HARUS melewati 8 tahap tadi. <strong>Kalau salah satu tahap gagal, pesa TIDAK dikirim.</strong> Ini mencegah spam dan melindungi akun bot dari ban oleh&nbsp;Telegram.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Anti-Ban, Bukan Kameraflase</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot TIDAK memakai trik curang seperti: ganti token, proxy rotation, kontak palsu, atau scraping. Bot menghormati rate limit Telegram secara&nbsp;jujur.</p>
+<p style="margin:0 0 12px 0;line-height:1.7">Kalau Telegram bilang pelan-pelan (error 429), bot jeda sesuai waktu yang diperintah (retry_after), lalu coba lagi maksimal 3 kali. Kalau masih gagal, sinyal ditandai&nbsp;failed.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Broadcast Queue</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Kalau bot harus kirim ke banyak user sekaligus, dia TIDAK pernah loop for user in users: send(). Semua masuk antrian dulu, lalu dikirim satu-satu dengan jeda. Ini mencegah bot ke-ban karena&nbsp;flood.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Kuota User</h3>
+<ul style="margin:8px 0;padding-left:20px;list-style-type:disc">
+<li style="margin:4px 0;line-height:1.6"><strong>FREE</strong> = 3 analisa per minggu</li>
+<li style="margin:4px 0;line-height:1.6"><strong>VIP</strong> = 4 analisa per hari (kadaluarsa auto-fallback ke FREE)</li>
+<li style="margin:4px 0;line-height:1.6">Command ringan (/help, /status, /limit) TIDAK mengurangi kuota</li>
+</ul></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 8640px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">09</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 4 / 13; align-items: start; justify-content: start;">
+<h1 class="hero-type weight-black" style="font-size: var(--text-scale-4)">CHANNEL:
+TELEGRAM DAN WHATSAPP</h1>
+</div>
+      <div class="grid-item" style="grid-area: 4 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Arsitektur Channel</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Otak bot (core engine) TIDAK tahu tentang Telegram atau WhatsApp. Dia hanya bicara dengan protokol abstrak (ChannelAdapter). Jadi kalau nanti mau tambah Discord atau LINE, tinggal bikin adapter baru tanpa ubah core&nbsp;engine.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Telegram (AKTIF)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Bot punya adapter Telegram lengkap: handler pesan, parser intent bahasa Indonesia dan Inggris, keyboard inline, rate limiter, dan compliance guard. Sekarang berjalan di mode simulasi&nbsp;(localhost).</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">WhatsApp (DIMATIKAN)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Kodenya sudah lengkap: adapter, opt-in system, template pesan, compliance pipeline, 24h service window, dan delivery quality threshold. Tapi sengaja dimatikan sesuai spesifikasi. Tinggal aktifkan&nbsp;nanti.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-data_dashboard" style="top: 9600px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">10</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 7 / 7; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">57</span><span class="stat-unit">tests</span></div>
+            <span class="stat-label">AUTOMATED TESTS</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 1 / 7 / 7 / 13; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">2.78</span><span class="stat-unit">sec</span></div>
+            <span class="stat-label">TOTAL RUNTIME</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 7 / 1 / 13 / 7; align-items: start; justify-content: start;">
+<div class="stat-block">
+            <div><span class="stat-num">10</span><span class="stat-unit">files</span></div>
+            <span class="stat-label">TEST MODULES</span>
+        </div>
+</div>
+      <div class="grid-item" style="grid-area: 7 / 7 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box; font-size: 12px;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Hasil Test Lengkap (57/57 PASS)</h3>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_scoring (5)</strong> - Bobot = 100, skor sempurna/nol, threshold, confidence&nbsp;clamping.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_intent (10)</strong> - Semua command, NL pairs (gold/emas/EURUSD), PNL, scanner,&nbsp;admin.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_quota (4)</strong> - Free 3/minggu, VIP 4/hari, expired fallback, reason&nbsp;code.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_compliance (8)</strong> - Allowed, no-consent, opt-out, suppressed, rate limit, duplicate, quiet&nbsp;hours.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_rate_limit (5)</strong> - Chat burst block, group 20/min, 429 honor&nbsp;retry.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_signal (6)</strong> - Fingerprint, dedup on SL change, delivery&nbsp;policy.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_market_analysis (6)</strong> - Candle shape, 5 TF, deterministic&nbsp;replay.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_broadcast (4)</strong> - 1000 user, dedup, 429&nbsp;retry.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_channels (5)</strong> - Isolation, WhatsApp&nbsp;disabled.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>test_handler_e2e (4)</strong> - Full flow, chart on&nbsp;disk.</p></div>
+</div>
+    </div>
+  </div>
+
+  <div class="page-section archetype-editorial_flow" style="top: 10560px; height: 960px;">
+    <div class="safe-zone" style="gap: 16px; inset: 8% 10%;">
+      <div class="page-ghost">11</div>
+      <div class="grid-item" style="grid-area: 1 / 1 / 3 / 13; align-items: start; justify-content: start;">
+<h1 class="hero-type weight-black" style="font-size: var(--text-scale-4)">APA YANG
+BELUM JADI?</h1>
+</div>
+      <div class="grid-item" style="grid-area: 3 / 1 / 13 / 13; align-items: stretch; justify-content: start;">
+<div class="glass-canvas" style="width:100%; min-height:100%; box-sizing:border-box; font-size: 13px;"><h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Yang Butuh Untuk Go-Live</h3>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>Telegram Bot Token</strong> - Dari @BotFather, biar bot bisa terima dan kirim pesan beneran ke&nbsp;user.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>API Key Market Data</strong> - Twelve Data atau Alpha Vantage, biar analisa pakai data harga asli (sekarang masih pakai data&nbsp;simulasi/dummy).</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>AI/LLM Integration</strong> - Biar bot bisa menjelaskan analisa pakai bahasa manusia yang natural dan&nbsp;informatif.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>Database PostgreSQL</strong> - Sekarang pakai SQLite sementara untuk&nbsp;development.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Yang Sudah Siap Tapi Dimatikan</h3>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>WhatsApp</strong> - Kodenya sudah ada lengkap (adapter, opt-in, compliance, template), tapi sengaja dimatikan sesuai spesifikasi. Tinggal aktifkan nanti kalau&nbsp;mau.</p>
+<p style="margin:0 0 12px 0;line-height:1.7"><strong>Elliott Wave</strong> - Placeholder sudah ada, analisa belum&nbsp;diimplementasi.</p>
+<h3 style="font-size:16px;font-weight:700;margin:20px 0 8px 0;color:var(--c-accent);text-transform:uppercase;letter-spacing:0.05em;">Analogi Sederhana</h3>
+<p style="margin:0 0 12px 0;line-height:1.7">Fase 1 itu kayak sudah membangun kerangka mobil lengkap: mesin, rem, stir, bakar - semua nyambung dan sudah ditest. Tinggal isi bensin (API key dan bot token) terus bawa&nbsp;jalan.</p></div>
+</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -55,4 +55,8 @@ def get_provider():
         from .alphavantage import AlphaVantageProvider
 
         return AlphaVantageProvider()
+    if mode == "mt5":
+        from .mt5 import MT5Provider
+
+        return MT5Provider()
     raise ProviderError(f"MARKET_DATA_MODE tidak dikenal: {mode}")

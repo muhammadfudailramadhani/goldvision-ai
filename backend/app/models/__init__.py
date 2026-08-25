@@ -34,6 +34,11 @@ class User(Base):
     language: Mapped[str] = mapped_column(String(10), default="id")
     plan: Mapped[str] = mapped_column(String(10), default=Plan.FREE.value)
     plan_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # §19 referral: kode unik per user; reward = bonus quota, BUKAN VIP gratis
+    referral_code: Mapped[str | None] = mapped_column(String(12), unique=True)
+    referred_by: Mapped[int | None] = mapped_column(ForeignKey("user.id"))
+    referral_rewarded: Mapped[bool] = mapped_column(Boolean, default=False)
+    bonus_quota: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 

@@ -4,6 +4,8 @@ Signal -> BroadcastQueue -> RateLimiter -> Telegram Delivery.
 JANGAN broadcast langsung dari request handler (for user in users: send()).
 """
 import asyncio
+import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
@@ -43,11 +45,15 @@ class BroadcastQueue:
     """Queue async dengan rate limiter & 429-aware retry. Tidak pernah bypass 429 (§23)."""
 
     def __init__(self, sender, rate_policy, known_fingerprints: set[str] | None = None,
-                 max_retries: int = 3):
+                 max_retries: int = 3,
+                 retry_pause: Callable[[float], None] | None = None):
         self.sender = sender                    # async fn(chat_id, item) -> str message_id | raise
         self.rate_policy = rate_policy
         self.known_fingerprints = known_fingerprints or set()
         self.max_retries = max_retries
+        # §23: honor retry_after — default pause beneran; simulator boleh inject noop
+        self.retry_pause: Callable[[float], None] = retry_pause if retry_pause is not None \
+            else time.sleep
         self._queue: asyncio.Queue[DeliveryItem] = asyncio.Queue()
 
     def enqueue(self, item: DeliveryItem) -> bool:
@@ -102,7 +108,8 @@ class BroadcastQueue:
                 item.status, item.error = "FAILED", f"429 x{item.attempts}: {e}"
                 report.failed += 1
             else:
-                # honor retry_after, requeue
+                # §23: honor retry_after — pause dulu, baru requeue (bukan spin)
+                self.retry_pause(e.retry_after)
                 self._queue.put_nowait(item)
                 return
         except Exception as e:  # noqa: BLE001 — failure diklasifikasikan delivery_policy

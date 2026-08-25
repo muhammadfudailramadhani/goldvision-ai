@@ -38,6 +38,7 @@ class QuotaService:
     def check(self, user) -> QuotaDecision:
         plan = self._plan(user)
         limit, window = LIMITS[plan]
+        limit += getattr(user, "bonus_quota", 0) or 0  # §19: reward referral menambah limit
         since = (datetime.now(timezone.utc) - (timedelta(days=7) if plan == "FREE" else timedelta(days=1)))
         used = self.quota.count_since(user.id, since)
         if used >= limit:

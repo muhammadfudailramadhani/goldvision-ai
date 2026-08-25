@@ -44,7 +44,8 @@ def evaluate_for_signal(analysis) -> SignalCandidate | None:
         return None
     if rec.rr is not None and rec.rr < MIN_RR:
         return None
-    fp = make_fingerprint(analysis.pair, rec.action, rec.entry, rec.sl, rec.tp1, rec.tp2, rec.timeframe or "M15")
+    fp = make_fingerprint(analysis.pair, rec.action, rec.entry, rec.sl, rec.tp1, rec.tp2,
+                          getattr(analysis, "chart_timeframe", None) or "M15")
     return SignalCandidate(
         pair=analysis.pair, direction=rec.action, timeframe="M15",
         entry=rec.entry, sl=rec.sl, tp1=rec.tp1, tp2=rec.tp2,

@@ -65,7 +65,8 @@ def main():
         return f"sim-{len(sent_log)}"
 
     policy = RatePolicy(RateLimiter())
-    queue = BroadcastQueue(sender, policy)
+    # Simulator: pause 429 di-noop supaya demo cepat; production memakai time.sleep (§23)
+    queue = BroadcastQueue(sender, policy, retry_pause=lambda _s: None)
     report = DeliveryReport(broadcast_id="demo-bc-001")
 
     fp = "fingerprint-demo-v1"

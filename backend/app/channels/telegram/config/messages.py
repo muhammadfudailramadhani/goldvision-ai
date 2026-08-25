@@ -2,7 +2,26 @@
 
 WELCOME = """Welcome to GoldVision AI \U0001f3c6\n\nAnalisis Forex real-time via Telegram.\nTipe /help untuk melihat semua command."""
 
-HELP_TEXT = """\U0001f4cb Commands:\n\n/analyze — Analisis live pair\n/signals — Sinyal terbaru\n/scanner — Cari setup terbaik\n/pnl — Ringkasan PNL\n/limit — Cek quota\n/status — Status bot\n/subscribe — Info langganan\n/menu — Menu utama\n/help — Bantuan ini\n\n\U0001f5e3 Natural language juga bekerja:\n\"Gold sekarang bagaimana?\"\n\"Analisa EURUSD\""""
+HELP_TEXT = """\U0001f4cb Commands:
+
+/analyze — Analisis live pair
+/signals — Sinyal terbaru
+/scanner — Cari setup terbaik
+/backtest — Uji strategi pada data historis
+/pnl — Ringkasan PNL
+/limit — Cek quota
+/notifications on|off — Atur notifikasi broadcast
+/referral — Kode & statistik referral
+/status — Status bot
+/subscribe — Info langganan
+/menu — Menu utama
+/help — Bantuan ini
+/stop — Berhenti menggunakan bot
+
+\U0001f5e3 Natural language juga bekerja:
+"Gold sekarang bagaimana?"
+"Analisa EURUSD"
+"Backtest gold M15\""""
 
 MENU_TEXT = """\U0001f3c6 GoldVision AI\n\nPilih menu:\n"""
 
@@ -19,6 +38,29 @@ SIGNAL_FORMAT = """\U0001f4c8 {direction} {pair}\n\nEntry: {entry:g}\nSL: {sl:g}
 SUBSCRIPTION_INFO = """\U0001f3c6 GoldVision AI — Langganan\n\n\U0001f7e2 FREE: 3 analisis/minggu\n\U0001f535 VIP: 4 analisis/hari\n\nHubungi admin untuk upgrade."""
 
 NOT_FOUND = """Maaf, perintah tidak dikenali.\nTipe /help untuk melihat command yang tersedia."""
+
+BACKTEST_FORMAT = """\U0001f9ee Backtest {pair} {timeframe}
+
+Bars diuji: {bars} \u00b7 Evaluasi: {evaluations}
+Sinyal: {signals} (terisi {filled})
+
+\U0001f7e2 Win: {wins} \u00b7 \U0001f534 Loss: {losses} \u00b7 Open: {open_}
+Win rate: {win_rate}%
+Total: {total_r} R
+Profit factor: {profit_factor}
+Max drawdown: {max_dd} R
+
+\u26a0\ufe0f Edukasi & riset \u2014 hasil historis bukan jaminan masa depan."""
+
+BACKTEST_NO_DATA = """\u26a0\ufe0f Data historis {pair} {timeframe} belum cukup untuk backtest (butuh > {min_history} bars)."""
+
+STOP_CONFIRMED = """\U0001f44b Kamu telah berhenti menggunakan GoldVision AI.
+
+Notifikasi dimatikan dan akun dinonaktifkan. Ketik /start kapan saja untuk mulai lagi."""
+
+NOTIFICATIONS_STATUS_ON = """\U0001f514 Notifikasi aktif. Gunakan "/notifications off" untuk mematikan."""
+
+NOTIFICATIONS_STATUS_OFF = """\U0001f515 Notifikasi mati. Gunakan "/notifications on" untuk menyalakan lagi."""
 
 USER_BLOCKED = """\U0001f6ab Pesan tidak terkirim — user tidak aktif atau telah memblokir bot."""
 

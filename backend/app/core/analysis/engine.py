@@ -43,6 +43,12 @@ class AnalysisEngine:
 
     async def analyze(self, pair: str) -> AnalysisResult:
         candles_by_tf = {tf: await self.provider.get_candles(pair, tf) for tf in ANALYSIS_TFS}
+        # Kegagalan jujur: provider yang kembali kosong = error, bukan crash index
+        for tf, candles in candles_by_tf.items():
+            if not candles:
+                raise ValueError(
+                    f"Data {pair} {tf} kosong — provider gagal atau pair tidak tersedia."
+                )
         m15 = candles_by_tf["M15"]
 
         trend_by_tf = {tf: detect_trend([c.close for c in candles]).direction for tf, candles in candles_by_tf.items()}

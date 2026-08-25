@@ -1,17 +1,18 @@
 """Delivery policy (§26) — klasifikasi kegagalan permanen vs sementara."""
 
 PERMANENT_FAIL_SUBSTRINGS = ("blocked", "kicked", "chat not found", "unauthorized", "deactivated")
-TEMPORARY_FAIL_SUBSTRINGS = ("timeout", "network", "temporarily", "flood", 429)
+TEMPORARY_FAIL_SUBSTRINGS = ("timeout", "network", "temporarily")
+RATE_LIMIT_SUBSTRINGS = ("flood", "429", "too many requests")
 
 
 def classify_failure(error_text: str) -> str:
-    """Return PERMANENT | TEMPORARY | UNKNOWN."""
+    """Return PERMANENT | TEMPORARY | RATE_LIMIT | UNKNOWN."""
     lower = str(error_text).lower()
     if any(s in lower for s in PERMANENT_FAIL_SUBSTRINGS):
         return "PERMANENT"
-    if any(s in lower for s in ("timeout", "network", "temporarily")):
+    if any(s in lower for s in TEMPORARY_FAIL_SUBSTRINGS):
         return "TEMPORARY"
-    if "flood" in lower or "429" in lower:
+    if any(s in lower for s in RATE_LIMIT_SUBSTRINGS):
         return "RATE_LIMIT"
     return "UNKNOWN"
 

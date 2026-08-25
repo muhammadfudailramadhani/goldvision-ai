@@ -8,8 +8,6 @@ from dataclasses import dataclass, field
 
 from app.channels.base import MessageContext
 
-from .compliance.consent import register_consent
-from .config import messages
 from .config.features import is_admin, is_enabled
 
 
@@ -96,13 +94,17 @@ class TelegramAdapter:
         return self.transport.send_message(chat_id, text, buttons=buttons, **kwargs)
 
     async def parse_context(self, raw_update: dict) -> MessageContext | None:
-        """Parse update object Telegram. Return None jika bukan pesan teks."""
+        """Parse update object Telegram. Return None jika bukan pesan teks.
+
+        Murni parsing — TANPA side effect; consent dicatat satu tempat
+        (handler START branch) supaya tidak double-write per /start.
+        """
         msg = raw_update.get("message") or raw_update.get("edited_message")
         if not msg:
             return None
         user = msg.get("from") or {}
         text = msg.get("text", "")
-        ctx = MessageContext(
+        return MessageContext(
             user_id=str(user.get("id", "")),
             channel="telegram",
             message_id=str(msg.get("message_id", "")),
@@ -110,6 +112,3 @@ class TelegramAdapter:
             chat_id=str(msg.get("chat", {}).get("id", "")),
             is_admin=is_admin(str(user.get("id", ""))),
         )
-        if text.startswith("/start"):
-            register_consent("telegram", ctx.user_id)
-        return ctx

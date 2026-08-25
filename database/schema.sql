@@ -15,6 +15,11 @@ CREATE TABLE IF NOT EXISTS "user" (
     language      VARCHAR(10)  NOT NULL DEFAULT 'id',
     plan          VARCHAR(10)  NOT NULL DEFAULT 'FREE',
     plan_expires_at TIMESTAMPTZ,
+    -- §19 referral: kode unik per user; reward = bonus quota, BUKAN VIP gratis
+    referral_code   VARCHAR(12) UNIQUE,
+    referred_by     INTEGER REFERENCES "user"(id),
+    referral_rewarded BOOLEAN NOT NULL DEFAULT FALSE,
+    bonus_quota     INTEGER NOT NULL DEFAULT 0,
     created_at    TIMESTAMPTZ  NOT NULL DEFAULT now(),
     CONSTRAINT uq_user_channel_external UNIQUE (channel, external_id)
 );

@@ -5,7 +5,7 @@ health, info, dan endpoint analyze internal untuk developer preview.
 """
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 
 from app.core.analysis.engine import AnalysisEngine
@@ -74,11 +74,19 @@ async def analyze(req: AnalyzeRequest):
 
 
 @app.post("/webhook/telegram")
-async def telegram_webhook(update: dict):
-    """FASE 2 — butuh TELEGRAM_BOT_TOKEN. Tanpa token: tolak, jangan pura-pura jalan."""
+async def telegram_webhook(update: dict, request: Request):
+    """FASE 2 — butuh TELEGRAM_BOT_TOKEN. Tanpa token: tolak, jangan pura-pura jalan.
+
+    Bila TELEGRAM_WEBHOOK_SECRET disetel, update tanpa header secret yang cocok
+    ditolak 401 — endpoint publik tidak boleh memicu analysis/quota orang lain.
+    """
     s = get_settings()
     if not (s.telegram_enabled and s.telegram_bot_token):
         raise HTTPException(status_code=503, detail="Webhook belum dikonfigurasi (FASE 2)")
+    if s.telegram_webhook_secret:
+        header = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+        if header != s.telegram_webhook_secret:
+            raise HTTPException(status_code=401, detail="Secret token webhook tidak valid")
     from app.channels.telegram.handlers import handle_update
     result = await handle_update(update)
     return {"processed": result is not None, "intent": result.intent if result else None}

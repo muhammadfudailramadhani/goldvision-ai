@@ -7,6 +7,10 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT / "backend"))
 os.chdir(ROOT)  # chart & db relatif ke repo root
 
+# Test WAJIB mock — jangan pernah membakar kuota API live (429) saat pytest,
+# apa pun isi MARKET_DATA_MODE di .env. Env var menang atas .env (pydantic-settings).
+os.environ["MARKET_DATA_MODE"] = "mock"
+
 import pytest  # noqa: E402
 from sqlalchemy import create_engine  # noqa: E402
 from sqlalchemy.orm import sessionmaker  # noqa: E402
