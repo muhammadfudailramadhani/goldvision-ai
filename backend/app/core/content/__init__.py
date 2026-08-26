@@ -45,9 +45,16 @@ def draft_from_analysis(analysis) -> ContentDraft:
 
 
 async def generate_content(analysis) -> ContentDraft:
-    """Template atau AI sesuai settings; AI gagal = fallback template."""
+    """Template atau AI sesuai settings; AI gagal = fallback template.
+
+    Model reasoning (mis. nemotron) mengirim reasoning_content terpisah —
+    yang dipakai HANYA content akhir. Penyebab fallback selalu di-log
+    supaya kegagalan API tidak diam-diam."""
+    import logging
+
     from app.settings import get_settings
 
+    log = logging.getLogger(__name__)
     s = get_settings()
     if s.ai_mode == "mock" or not s.ai_api_key:
         return draft_from_analysis(analysis)
@@ -69,15 +76,31 @@ async def generate_content(analysis) -> ContentDraft:
             json={"model": s.ai_model,
                   "messages": [{"role": "system", "content": SYSTEM_PROMPT},
                                {"role": "user", "content": prompt}],
-                  "temperature": 0.7, "max_tokens": 300},
+                  "temperature": 0.7,
+                  # model reasoning memakai token utk berpikir — beri ruang cukup
+                  "max_tokens": 2048,
+                  "chat_template_kwargs": {"enable_thinking": True},
+                  "stream": False},
             headers={"Authorization": f"Bearer {s.ai_api_key}"},
-            timeout=30.0,
+            timeout=90.0,
         )
-        resp.raise_for_status()
-        text = str(resp.json()["choices"][0]["message"]["content"]).strip()
-    except Exception:
-        return draft  # fallback jujur
+        if resp.status_code != 200:
+            log.warning("AI fallback: HTTP %s dari %s: %s",
+                        resp.status_code, s.ai_model, resp.text[:200])
+            return draft
+        msg = resp.json()["choices"][0]["message"]
+        text = str(msg.get("content") or "").strip()
+        if not text:
+            # model reasoning kadang menghabiskan token di reasoning_content
+            log.warning("AI fallback: %s mengembalikan content kosong "
+                        "(reasoning %s char) — pakai template",
+                        s.ai_model, len(msg.get("reasoning_content") or ""))
+            return draft
+    except Exception as e:  # noqa: BLE001
+        log.warning("AI fallback (%s): %s", type(e).__name__, str(e)[:200])
+        return draft
 
     if looks_like_injection(text) or not check_outbound_text(text)[0]:
-        return draft  # output AI melanggar policy = buang, pakai template
+        log.warning("AI fallback: output melanggar policy §28 — pakai template")
+        return draft
     return ContentDraft(draft.title, text, "ai")

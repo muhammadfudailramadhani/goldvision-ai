@@ -14,7 +14,8 @@
   - CI (GitHub Actions), deployment guide + systemd unit (docs/25)
 - FASE 3 sisa (butuh eksternal):
   - Payment gateway asli (butuh kredensial Midtrans/Tripay dkk) — sandbox manual ✅
-  - AI asli (butuh API key LLM) — scaffold + guard ✅, tinggal isi key
+  - ~~AI asli~~ ✅ AKTIF: NVIDIA NIM (nemotron) via settings ai_* — reasoning-model
+    safe (fallback template bila content kosong), guard §28, terverifikasi live
   - Exit-price tracking utk win-rate riil /pnl
   - WhatsApp (§4 — HANYA atas permintaan eksplisit owner)
   - Alembic migration utk PostgreSQL skala besar

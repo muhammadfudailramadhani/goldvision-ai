@@ -204,6 +204,15 @@ async def test_callback_query_mapped_to_command(runtime, tmp_path, monkeypatch):
 @pytest.mark.asyncio
 async def test_konten_template_and_quota(runtime, tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
+    from types import SimpleNamespace
+
+    import app.settings as settings_mod
+
+    real = settings_mod.get_settings
+    # paksa template: test ini menguji jalur non-AI + quota
+    monkeypatch.setattr(settings_mod, "get_settings", lambda: SimpleNamespace(
+        **{**real().__dict__, "ai_mode": "mock", "ai_api_key": ""}))
+
     h = TelegramHandler(adapter=TelegramAdapter(SimulatedTransport()))
     await h.handle(_ctx("kt-1", "/start"))
     r = await h.handle(_ctx("kt-1", "/konten gold"))
@@ -233,3 +242,35 @@ async def test_konten_ai_mode_guarded_fallback(runtime, tmp_path, monkeypatch):
     await h.handle(_ctx("kt-2", "/start"))
     r = await h.handle(_ctx("kt-2", "buatkan konten gold"))
     assert "[template]" in r.reply  # fallback jujur
+
+
+@pytest.mark.asyncio
+async def test_konten_reasoning_model_empty_content_falls_back(runtime, tmp_path, monkeypatch):
+    """REGRESI: model reasoning yang menghabiskan token utk berpikir
+    (content kosong) -> fallback template, bukan reply kosong."""
+    monkeypatch.chdir(tmp_path)
+    import httpx as _httpx
+
+    from types import SimpleNamespace
+
+    import app.settings as settings_mod
+
+    real = settings_mod.get_settings
+    monkeypatch.setattr(settings_mod, "get_settings", lambda: SimpleNamespace(
+        **{**real().__dict__, "ai_mode": "openai", "ai_api_key": "k",
+           "ai_model": "test/reasoning-model"}))
+
+    class _Resp:
+        status_code = 200
+
+        def json(self):
+            return {"choices": [{"message": {
+                "content": "",  # habis dipakai reasoning
+                "reasoning_content": "x" * 500}}]}
+
+    monkeypatch.setattr(_httpx, "post", lambda *a, **k: _Resp())
+
+    h = TelegramHandler(adapter=TelegramAdapter(SimulatedTransport()))
+    await h.handle(_ctx("kt-3", "/start"))
+    r = await h.handle(_ctx("kt-3", "/konten gold"))
+    assert "[template]" in r.reply and len(r.reply) > 100
