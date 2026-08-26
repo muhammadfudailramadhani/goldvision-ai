@@ -5,6 +5,8 @@ health, info, dan endpoint analyze internal untuk developer preview.
 """
 from contextlib import asynccontextmanager
 
+import hmac
+
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 
@@ -70,6 +72,9 @@ async def analyze(req: AnalyzeRequest):
             "tp1": rec.tp1, "tp2": rec.tp2, "rr": rec.rr, "reasons": rec.reasons,
         },
         "elliott": result.elliott_status,
+        "patterns": [{"name": p.name, "name_id": p.name_id, "direction": p.direction,
+                      "confidence": p.confidence, "note": p.note}
+                     for p in result.patterns],
     }
 
 
@@ -85,7 +90,7 @@ async def telegram_webhook(update: dict, request: Request):
         raise HTTPException(status_code=503, detail="Webhook belum dikonfigurasi (FASE 2)")
     if s.telegram_webhook_secret:
         header = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
-        if header != s.telegram_webhook_secret:
+        if not hmac.compare_digest(header, s.telegram_webhook_secret):
             raise HTTPException(status_code=401, detail="Secret token webhook tidak valid")
     from app.channels.telegram.handlers import handle_update
     result = await handle_update(update)

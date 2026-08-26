@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from app.core.analysis.confluence import analyze_confluence
 from app.core.analysis.elliott_wave import detect_elliott
 from app.core.analysis.market_structure import analyze_structure
+from app.core.analysis.patterns import detect_patterns
 from app.core.analysis.recommendation import Recommendation, build_recommendation
 from app.core.analysis.smc import detect_smc
 from app.core.analysis.supply_demand import find_zones
@@ -33,6 +34,7 @@ class AnalysisResult:
     confluence: object
     recommendation: Recommendation
     elliott_status: str
+    patterns: list = field(default_factory=list)  # pola chart terdeteksi (pivot asli)
     chart_timeframe: str = CHART_TIMEFRAME
     notes: list = field(default_factory=list)
 
@@ -78,6 +80,7 @@ class AnalysisEngine:
         bias = "BULLISH" if dominant >= 0 and smc.bias != "BEARISH" else \
                "BEARISH" if dominant <= 0 and smc.bias != "BULLISH" else "NEUTRAL"
         recommendation = build_recommendation(m15, bias, score.total, confluence.tf_blocked)
+        patterns = detect_patterns(m15)
 
         return AnalysisResult(
             pair=pair,
@@ -91,4 +94,5 @@ class AnalysisEngine:
             confluence=confluence,
             recommendation=recommendation,
             elliott_status=elliott.status,
+            patterns=patterns,
         )

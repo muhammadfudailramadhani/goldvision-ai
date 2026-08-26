@@ -21,6 +21,7 @@ Telegram AI Forex Analyst — **Telegram-first, WhatsApp disiapkan tapi DISABLED
 | Referral end-to-end (/referral, deep-link) | ✅ FASE 2 |
 | Twelve Data / Alpha Vantage / MT5 live | ✅ FASE 2 |
 | Backtest walk-forward (/backtest) | ✅ FASE 2 |
+| 17 chart pattern (pivot asli) + 8 indikator | ✅ FASE 2+ (docs/27) |
 | Bot Telegram nyata (polling/webhook) | ✅ polling (`scripts/run_telegram.py`) |
 | Payment / AI content asli | 🔒 FASE 3 |
 | WhatsApp aktivasi, deployment prod | 🔒 FASE 3 / atas permintaan |

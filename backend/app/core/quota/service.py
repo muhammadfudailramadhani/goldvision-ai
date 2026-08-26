@@ -29,8 +29,14 @@ class QuotaService:
         self.quota = QuotaRepo(session)
 
     def _plan(self, user) -> str:
+        exp = user.plan_expires_at
+        if exp is not None and exp.tzinfo is None:
+            # sqlite menyimpan naive-UTC — normalisasi agar tidak TypeError
+            from datetime import timezone as _tz
+
+            exp = exp.replace(tzinfo=_tz.utc)
         if user.plan == Plan.VIP.value and (
-            user.plan_expires_at is None or user.plan_expires_at > datetime.now(timezone.utc)
+            exp is None or exp > datetime.now(timezone.utc)
         ):
             return "VIP"
         return "FREE"

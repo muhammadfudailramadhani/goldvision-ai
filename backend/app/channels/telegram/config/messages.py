@@ -8,7 +8,8 @@ HELP_TEXT = """\U0001f4cb Commands:
 /signals — Sinyal terbaru
 /scanner — Cari setup terbaik
 /backtest — Uji strategi pada data historis
-/pnl — Ringkasan PNL
+/konten — Draft konten edukasi pair
+/pnl — Ringkasan sinyal diterima 7 hari
 /limit — Cek quota
 /notifications on|off — Atur notifikasi broadcast
 /referral — Kode & statistik referral
@@ -19,9 +20,11 @@ HELP_TEXT = """\U0001f4cb Commands:
 /stop — Berhenti menggunakan bot
 
 \U0001f5e3 Natural language juga bekerja:
-"Gold sekarang bagaimana?"
-"Analisa EURUSD"
-"Backtest gold M15\""""
+\"Gold sekarang bagaimana?\"
+\"Analisa EURUSD\"
+\"Backtest gold M15\"
+\"Analisa gold dengan rsi macd\"
+\"Gold ema bollinger semua indikator\""""
 
 MENU_TEXT = """\U0001f3c6 GoldVision AI\n\nPilih menu:\n"""
 
@@ -35,7 +38,7 @@ ANALYSIS_FORMAT = """\U0001f3c6 {pair} · {timeframe}\n\n\U0001f4c9 Harga: {pric
 
 SIGNAL_FORMAT = """\U0001f4c8 {direction} {pair}\n\nEntry: {entry:g}\nSL: {sl:g}\nTP1: {tp1:g}\nTP2: {tp2:g}\nScore: {score}/100\nRR: {rr:g}\n\n\u26a0\ufe0f Edukasi, bukan saran finansial."""
 
-SUBSCRIPTION_INFO = """\U0001f3c6 GoldVision AI — Langganan\n\n\U0001f7e2 FREE: 3 analisis/minggu\n\U0001f535 VIP: 4 analisis/hari\n\nHubungi admin untuk upgrade."""
+SUBSCRIPTION_INFO = """\U0001f3c6 GoldVision AI — Langganan\n\n\U0001f7e2 FREE: 3 analisis/minggu\n\U0001f535 VIP: 4 analisis/hari\n\nMode sandbox: hubungi admin untuk upgrade (aktivasi manual via /admin_vip)."""
 
 NOT_FOUND = """Maaf, perintah tidak dikenali.\nTipe /help untuk melihat command yang tersedia."""
 

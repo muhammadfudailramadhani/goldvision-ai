@@ -20,8 +20,10 @@ class SmcResult:
 
 def _atr(candles: list, period: int = 14) -> float:
     seg = candles[-period:]
-    trs = [max(c.high - c.low, abs(c.high - candles[i - 1].close), abs(c.low - candles[i - 1].close))
-           for i, c in enumerate(seg) if i > 0]
+    trs = [max(seg[i].high - seg[i].low,
+               abs(seg[i].high - seg[i - 1].close),
+               abs(seg[i].low - seg[i - 1].close))
+           for i in range(1, len(seg))]
     return sum(trs) / max(len(trs), 1)
 
 

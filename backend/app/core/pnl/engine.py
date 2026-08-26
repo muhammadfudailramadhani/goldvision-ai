@@ -57,3 +57,26 @@ class PnlEngine:
     def __init__(self, session):
         self.session = session
         self.users = UserRepo(session)
+
+    def weekly_for_user(self, user) -> PnlSummary:
+        """Ringkasan jujur dari sinyal yang TERKIRIM ke user minggu ini.
+
+        Exit price belum ditrack (FASE 3) -> semua dihitung OPEN; jangan
+        mengarang win-rate. Struktur & R-mapping tetap dipakai agar siap
+        ketika exit tracking aktif."""
+        from datetime import datetime, timezone as _tz
+
+        from sqlalchemy import select
+
+        from app.models import Signal, SignalDelivery
+
+        start, _ = weekly_window()
+        rows = list(self.session.execute(
+            select(SignalDelivery, Signal)
+            .join(Signal, SignalDelivery.signal_id == Signal.id)
+            .where(SignalDelivery.user_id == user.id,
+                   SignalDelivery.status == "SENT",
+                   SignalDelivery.sent_at >= start)
+        ).all())
+        pairs = [(sig, None) for _, sig in rows]  # exit belum ada -> open
+        return summarize(pairs)

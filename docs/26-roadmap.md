@@ -1,16 +1,20 @@
 # Roadmap
 
-> Status dokumen: FASE 2 — mayoritas selesai dan terverifikasi test.
+> Status: **FASE 2 SELESAI PENUH** — seluruh item yang bisa dibangun sudah terimplementasi & terverifikasi (145 test PASS).
 
 - FASE 1 ✅: foundation + simulator + compliance + test (57/57 PASS)
-- FASE 2 ✅ (terverifikasi 83/83 PASS):
-  - Twelve Data live (`core/market/twelvedata.py`)
-  - Alpha Vantage fallback (`core/market/alphavantage.py`) — FX_INTRADAY/FX_DAILY, H4 agregasi H1
-  - MT5 provider (`core/market/mt5.py`) — integrasi terminal broker
-  - Bot Telegram nyata polling (`scripts/run_telegram.py`)
-  - Elliott Wave rule-based (`core/analysis/elliott_wave.py`)
-  - Referral end-to-end (`core/referral/`, `/referral`, deep-link `/start <kode>`)
-  - Backtest walk-forward (`core/backtest/`, `/backtest`) — docs/12-backtest.md
-  - `/stop` opt-out penuh + `/notifications on|off`
-- FASE 2 sisa: PostgreSQL prod (compose siap, belum dipakai), deployment (§25)
-- FASE 3: payment (§18), AI content asli (§21), WhatsApp aktivasi (atas permintaan §4)
+- FASE 2 ✅ (145/145 PASS):
+  - Twelve Data / Alpha Vantage / MT5 live (§12)
+  - Bot polling nyata + webhook script + secret auth
+  - Elliott Wave, 17 chart pattern (pivot asli), 8 indikator kategori (docs/27)
+  - Referral end-to-end, backtest walk-forward, /stop, /notifications
+  - Admin suite: /admin_stats, /admin_users, /admin_vip (sandbox §18), /admin_broadcast, /admin_scan
+  - Auto-signal pipeline: core/signals/scan.py + scripts/auto_signal.py
+  - /pnl nyata (delivery-based), /konten (template/AI + guard), callback query buttons
+  - CI (GitHub Actions), deployment guide + systemd unit (docs/25)
+- FASE 3 sisa (butuh eksternal):
+  - Payment gateway asli (butuh kredensial Midtrans/Tripay dkk) — sandbox manual ✅
+  - AI asli (butuh API key LLM) — scaffold + guard ✅, tinggal isi key
+  - Exit-price tracking utk win-rate riil /pnl
+  - WhatsApp (§4 — HANYA atas permintaan eksplisit owner)
+  - Alembic migration utk PostgreSQL skala besar

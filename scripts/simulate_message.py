@@ -64,7 +64,7 @@ async def main():
     print(f"Chart:\n{result.chart_path or '-'}\n")
     print(f"Score:\n{result.score if result.score is not None else '-'}\n")
     print(f"Action:\n{result.action or '-'}\n")
-    print(f"Reply:\n{result.reply[:500]}")
+    print(f"Reply:\n{result.reply[:1500]}")
     if result.chart_path and not Path(result.chart_path).exists():
         print(f"\n!! chart path dilaporkan tapi file tidak ada: {result.chart_path}")
 

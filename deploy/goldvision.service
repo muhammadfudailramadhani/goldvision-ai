@@ -1,0 +1,22 @@
+[Unit]
+Description=GoldVision AI — Telegram Forex Analyst
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# GANTI path ini sesuai lokasi deploy di VPS:
+User=goldvision
+WorkingDirectory=/opt/goldvision-ai
+Environment=PYTHONUNBUFFERED=1
+# Token & credential dibaca dari .env (§29 — jangan pernah hardcode di sini)
+ExecStart=/opt/goldvision-ai/.venv/bin/python scripts/run_telegram.py
+Restart=always
+RestartSec=10
+# Hardening dasar
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

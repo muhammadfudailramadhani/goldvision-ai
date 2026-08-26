@@ -33,6 +33,9 @@ class SimulatedTransport:
         from .delivery.queue import RetryAfterError
         raise RetryAfterError(retry_after)
 
+    def answer_callback_query(self, callback_query_id: str, text: str = "") -> None:
+        pass  # simulator: tidak ada loading spinner yang perlu dihentikan
+
 
 @dataclass
 class HttpTransport:
@@ -68,6 +71,15 @@ class HttpTransport:
         resp.raise_for_status()
         return str(data.get("result", {}).get("message_id", ""))
 
+    def answer_callback_query(self, callback_query_id: str, text: str = "") -> None:
+        import httpx
+        try:
+            httpx.post(self._url("answerCallbackQuery"),
+                       json={"callback_query_id": callback_query_id, "text": text},
+                       timeout=10.0)
+        except Exception:
+            pass  # spinner hilang sendiri; jangan gagalkan alur karena ini
+
 
 class TelegramAdapter:
     channel_name = "telegram"
@@ -94,21 +106,47 @@ class TelegramAdapter:
         return self.transport.send_message(chat_id, text, buttons=buttons, **kwargs)
 
     async def parse_context(self, raw_update: dict) -> MessageContext | None:
-        """Parse update object Telegram. Return None jika bukan pesan teks.
+        """Parse update object Telegram (message / edited_message / callback_query).
 
         Murni parsing — TANPA side effect; consent dicatat satu tempat
         (handler START branch) supaya tidak double-write per /start.
+        Callback data dipetakan ke teks command yang setara.
         """
         msg = raw_update.get("message") or raw_update.get("edited_message")
-        if not msg:
-            return None
-        user = msg.get("from") or {}
-        text = msg.get("text", "")
-        return MessageContext(
-            user_id=str(user.get("id", "")),
-            channel="telegram",
-            message_id=str(msg.get("message_id", "")),
-            text=text,
-            chat_id=str(msg.get("chat", {}).get("id", "")),
-            is_admin=is_admin(str(user.get("id", ""))),
-        )
+        if msg:
+            user = msg.get("from") or {}
+            text = msg.get("text", "")
+            return MessageContext(
+                user_id=str(user.get("id", "")),
+                channel="telegram",
+                message_id=str(msg.get("message_id", "")),
+                text=text,
+                chat_id=str(msg.get("chat", {}).get("id", "")),
+                is_admin=is_admin(str(user.get("id", ""))),
+            )
+
+        cb = raw_update.get("callback_query")
+        if cb:
+            data = str(cb.get("data", ""))
+            text = _callback_to_text(data)
+            user = cb.get("from") or {}
+            return MessageContext(
+                user_id=str(user.get("id", "")),
+                channel="telegram",
+                message_id=str(cb.get("id", "")),
+                text=text,
+                chat_id=str(cb.get("message", {}).get("chat", {}).get("id", "")),
+                is_admin=is_admin(str(user.get("id", ""))),
+                callback_id=str(cb.get("id", "")),
+            )
+        return None
+
+
+def _callback_to_text(data: str) -> str:
+    """'analyze:XAUUSD' -> '/analyze XAUUSD'; 'pnl' -> '/pnl'."""
+    if ":" in data:
+        action, arg = data.split(":", 1)
+        return f"/{action} {arg}".strip()
+    known = {"scanner", "pnl", "limit", "subscribe", "menu", "status", "help",
+             "referral", "backtest", "notifications"}
+    return f"/{data}" if data in known else data

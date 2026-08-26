@@ -24,7 +24,10 @@ class Settings(BaseSettings):
 
     # Market data & AI — §47: localhost = mock
     market_data_mode: str = "mock"
-    ai_mode: str = "mock"
+    ai_mode: str = "mock"  # mock | openai (endpoint kompatibel OpenAI)
+    ai_api_key: str = ""
+    ai_base_url: str = "https://api.openai.com/v1"
+    ai_model: str = "gpt-4o-mini"
     payment_mode: str = "sandbox"
     twelvedata_api_key: str = ""
     alphavantage_api_key: str = ""

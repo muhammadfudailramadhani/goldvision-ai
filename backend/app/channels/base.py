@@ -14,6 +14,7 @@ class MessageContext:
     text: str
     chat_id: str = ""
     is_admin: bool = False
+    callback_id: str | None = None  # id callback_query (untuk answerCallbackQuery)
 
 
 @runtime_checkable
